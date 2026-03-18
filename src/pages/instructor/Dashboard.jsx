@@ -35,8 +35,10 @@ const InstructorDashboard = () => {
         setSelectedCourse,
         loading,
         submitting,
+        publishing,
         revising,
         submitForReview,
+        publishCourse,
         reviseCourse,
         refetch,
     } = useInstructorCourses(user?.userId, statusFilter);
@@ -63,6 +65,10 @@ const InstructorDashboard = () => {
         await submitForReview(courseId);
     };
 
+    const handlePublish = async (courseId) => {
+        await publishCourse(courseId);
+    };
+
     const handleReviseCourse = async (courseId) => {
         await reviseCourse(courseId);
     };
@@ -85,7 +91,7 @@ const InstructorDashboard = () => {
 
     // Callback khi course được update thành công
     const handleCourseUpdated = (updatedCourse) => {
-        refetch();
+refetch();
         if (selectedCourse?.courseId === updatedCourse.courseId) {
             setSelectedCourse(updatedCourse);
         }
@@ -140,11 +146,13 @@ const InstructorDashboard = () => {
                         onCourseChange={setSelectedCourse}
                         onStatusFilterChange={setStatusFilter}
                         onSubmitForReview={handleSubmitForReview}
+                        onPublish={handlePublish}
                         onReviseCourse={handleReviseCourse}
                         onOpenCreateModal={onCreateOpen}
                         onEditCourse={handleEditCourse}
                         onDeleteCourse={handleDeleteCourse}
                         submitting={submitting}
+                        publishing={publishing}
                         revising={revising}
                     />
 
@@ -167,7 +175,7 @@ const InstructorDashboard = () => {
                     <DeleteCourseModal
                         isOpen={deleteCourseModal.isOpen}
                         onClose={handleCloseDeleteModal}
-                        course={deleteCourseModal.course}
+course={deleteCourseModal.course}
                         onCourseDeleted={handleCourseDeleted}
                     />
 

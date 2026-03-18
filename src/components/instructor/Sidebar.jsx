@@ -12,7 +12,6 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import {
     SchoolIcon,
-    DashboardIcon,
     BookIcon,
     SettingsIcon,
     LogoutIcon,
@@ -33,7 +32,6 @@ const Sidebar = ({ activeTab, setActiveTab, isCollapsed, setIsCollapsed }) => {
     };
 
     const menuItems = [
-        { id: "dashboard", label: "Dashboard", icon: DashboardIcon },
         { id: "courses", label: "My Courses", icon: BookIcon },
     ];
 
@@ -95,7 +93,7 @@ const Sidebar = ({ activeTab, setActiveTab, isCollapsed, setIsCollapsed }) => {
                 <Flex justify="center" mb={4}>
                     <IconButton
                         icon={<ChevronRightIcon boxSize={5} />}
-                        variant="ghost"
+variant="ghost"
                         size="sm"
                         color="gray.400"
                         _hover={{ color: "white", bg: "gray.800" }}
@@ -164,7 +162,7 @@ const Sidebar = ({ activeTab, setActiveTab, isCollapsed, setIsCollapsed }) => {
                         py={6}
                         borderRadius="lg"
                         bg="transparent"
-                        color="gray.400"
+color="gray.400"
                         fontWeight="medium"
                         fontSize="sm"
                         _hover={{ bg: "gray.800", color: "white" }}

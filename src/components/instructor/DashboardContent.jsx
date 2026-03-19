@@ -78,7 +78,7 @@ const DashboardContent = ({ courseId, modules, loading, onToggleModule, onRefetc
                                 {totalModules}
                             </Text>
                         </HStack>
-                        <HStack
+<HStack
                             bg={statBg}
                             px={5}
                             py={3}
@@ -149,7 +149,7 @@ const DashboardContent = ({ courseId, modules, loading, onToggleModule, onRefetc
             <LessonResourcesModal
                 isOpen={!!resourceModalLesson}
                 onClose={() => setResourceModalLesson(null)}
-                lessonId={resourceModalLesson?.lessonId ?? resourceModalLesson?.id}
+lessonId={resourceModalLesson?.lessonId ?? resourceModalLesson?.id}
                 lessonTitle={resourceModalLesson?.title}
                 onSuccess={onRefetch}
             />
@@ -165,6 +165,9 @@ const DashboardContent = ({ courseId, modules, loading, onToggleModule, onRefetc
                 onClose={() => setUploadVideoLesson(null)}
                 lessonId={uploadVideoLesson?.lessonId ?? uploadVideoLesson?.id}
                 lessonTitle={uploadVideoLesson?.title}
+                existingVideoUrl={uploadVideoLesson?.mediaUrl ||
+                    uploadVideoLesson?.lessonResources?.find(r => r.fileType === "video")?.fileUrl}
+                videoResourceId={uploadVideoLesson?.lessonResources?.find(r => r.fileType === "video")?.resourceId}
                 onSuccess={onRefetch}
             />
         </>

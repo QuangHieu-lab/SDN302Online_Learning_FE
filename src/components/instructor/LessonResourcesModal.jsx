@@ -84,7 +84,7 @@ const LessonResourcesModal = ({ isOpen, onClose, lessonId, lessonTitle, onSucces
             setResources((prev) => prev.filter((r) => r.resourceId !== resourceId));
             toast({ title: "Đã xóa tài liệu", status: "success", duration: 3000 });
             if (onSuccess) onSuccess();
-        } catch (err) {
+} catch (err) {
             toast({ title: "Lỗi", description: err.message, status: "error", duration: 3000 });
         }
     };
@@ -151,7 +151,7 @@ const LessonResourcesModal = ({ isOpen, onClose, lessonId, lessonTitle, onSucces
                         <Text fontWeight="semibold" color={textColor}>
                             Danh sách tài liệu
                         </Text>
-                        {loading ? (
+{loading ? (
                             <HStack justify="center" py={4}>
                                 <Spinner size="sm" color={PRIMARY_COLOR} />
                             </HStack>
@@ -161,38 +161,40 @@ const LessonResourcesModal = ({ isOpen, onClose, lessonId, lessonTitle, onSucces
                             </Text>
                         ) : (
                             <VStack align="stretch" spacing={2}>
-                                {resources.map((r) => (
-                                    <HStack
-                                        key={r.resourceId}
-                                        justify="space-between"
-                                        p={2}
-                                        borderRadius="md"
-                                        bg={useColorModeValue("white", "gray.700")}
-                                        border="1px"
-                                        borderColor={useColorModeValue("gray.200", "gray.600")}
-                                    >
-                                        <HStack spacing={2} flex={1} minW={0}>
-                                            <BookIcon boxSize={4} color={PRIMARY_COLOR} />
-                                            <Link
-                                                href={r.fileUrl.startsWith("http") ? r.fileUrl : `${API_BASE}${r.fileUrl}`}
-                                                isExternal
-                                                fontSize="sm"
-                                                color={PRIMARY_COLOR}
-                                                noOfLines={1}
-                                            >
-                                                {r.title || "Tài liệu"}
-                                            </Link>
+                                {resources
+                                    .filter((r) => r.fileType !== "video")
+                                    .map((r) => (
+                                        <HStack
+                                            key={r.resourceId}
+                                            justify="space-between"
+                                            p={2}
+                                            borderRadius="md"
+                                            bg={useColorModeValue("white", "gray.700")}
+                                            border="1px"
+                                            borderColor={useColorModeValue("gray.200", "gray.600")}
+                                        >
+                                            <HStack spacing={2} flex={1} minW={0}>
+                                                <BookIcon boxSize={4} color={PRIMARY_COLOR} />
+                                                <Link
+                                                    href={r.fileUrl.startsWith("http") ? r.fileUrl : `${API_BASE}${r.fileUrl}`}
+                                                    isExternal
+                                                    fontSize="sm"
+                                                    color={PRIMARY_COLOR}
+                                                    noOfLines={1}
+                                                >
+                                                    {r.title || "Tài liệu"}
+                                                </Link>
+                                            </HStack>
+                                            <IconButton
+                                                aria-label="Xóa"
+                                                icon={<DeleteIcon boxSize={4} />}
+                                                size="sm"
+                                                variant="ghost"
+                                                colorScheme="red"
+                                                onClick={() => handleDelete(r.resourceId)}
+                                            />
                                         </HStack>
-                                        <IconButton
-                                            aria-label="Xóa"
-                                            icon={<DeleteIcon boxSize={4} />}
-                                            size="sm"
-                                            variant="ghost"
-                                            colorScheme="red"
-                                            onClick={() => handleDelete(r.resourceId)}
-                                        />
-                                    </HStack>
-                                ))}
+                                    ))}
                             </VStack>
                         )}
                     </VStack>

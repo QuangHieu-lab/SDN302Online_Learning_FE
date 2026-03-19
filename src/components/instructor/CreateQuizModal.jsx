@@ -83,7 +83,7 @@ const CreateQuizModal = ({ isOpen, onClose, lessonId, lessonTitle, onSuccess }) 
         }
         setCreating(true);
         try {
-            const created = await quizAPI.createQuiz(lessonId, {
+const created = await quizAPI.createQuiz(lessonId, {
                 title: title.trim(),
                 timeLimitMinutes: Number(timeLimitMinutes) || 0,
                 passingScore: Number(passingScore) || 60,
@@ -110,8 +110,9 @@ const CreateQuizModal = ({ isOpen, onClose, lessonId, lessonTitle, onSuccess }) 
 
     const handleEditQuiz = (q) => {
         quizAPI.getQuizById(q.quizId).then((fullQuiz) => {
-            setQuiz(fullQuiz);
-            setQuestions(fullQuiz.questions || []);
+            const quizData = fullQuiz?.quiz ?? fullQuiz;
+            setQuiz(quizData);
+            setQuestions(quizData.questions || []);
             setView("questions");
         }).catch(() => toast({ title: "Lỗi", description: "Không tải được quiz", status: "error" }));
     };
@@ -151,14 +152,15 @@ const CreateQuizModal = ({ isOpen, onClose, lessonId, lessonTitle, onSuccess }) 
         onAIClose();
         if (onSuccess) onSuccess();
         if (lessonId) {
-            quizAPI.getQuizzes(lessonId).then((list) => {
+quizAPI.getQuizzes(lessonId).then((list) => {
                 const arr = Array.isArray(list) ? list : [];
                 if (arr.length > 0) return quizAPI.getQuizById(arr[arr.length - 1].quizId);
                 return null;
             }).then((fullQuiz) => {
                 if (fullQuiz) {
-                    setQuiz(fullQuiz);
-                    setQuestions(fullQuiz.questions ?? []);
+                    const quizData = fullQuiz.quiz ?? fullQuiz;
+                    setQuiz(quizData);
+                    setQuestions(quizData.questions ?? []);
                     setView("questions");
                 } else {
                     handleClose();
@@ -176,18 +178,20 @@ const CreateQuizModal = ({ isOpen, onClose, lessonId, lessonTitle, onSuccess }) 
     const handleQuestionAdded = () => {
         if (!quiz?.quizId) return;
         quizAPI.getQuizById(quiz.quizId).then((q) => {
-            setQuiz(q);
-            setQuestions(q.questions || []);
-        }).catch(() => {});
+            const quizData = q?.quiz ?? q;
+            setQuiz(quizData);
+            setQuestions(quizData.questions || []);
+        }).catch(() => { });
         onFormClose();
     };
 
     const handleRefreshQuestions = () => {
         if (!quiz?.quizId) return;
         quizAPI.getQuizById(quiz.quizId).then((q) => {
-            setQuiz(q);
-            setQuestions(q.questions || []);
-        }).catch(() => {});
+            const quizData = q?.quiz ?? q;
+            setQuiz(quizData);
+            setQuestions(quizData.questions || []);
+        }).catch(() => { });
     };
 
     const handleClose = () => {
@@ -227,7 +231,7 @@ const CreateQuizModal = ({ isOpen, onClose, lessonId, lessonTitle, onSuccess }) 
     const renderForm = () => (
         <VStack align="stretch" spacing={4}>
             <FormControl>
-                <FormLabel fontSize="sm" color={textColor}>Tiêu đề</FormLabel>
+<FormLabel fontSize="sm" color={textColor}>Tiêu đề</FormLabel>
                 <Input
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
@@ -304,7 +308,7 @@ const CreateQuizModal = ({ isOpen, onClose, lessonId, lessonTitle, onSuccess }) 
                         {view === "form" && renderForm()}
                         {view === "questions" && renderQuestions()}
                     </ModalBody>
-                    <ModalFooter>
+<ModalFooter>
                         {view === "list" && (
                             <Button variant="ghost" onClick={handleClose}>Đóng</Button>
                         )}

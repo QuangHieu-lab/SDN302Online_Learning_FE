@@ -15,6 +15,8 @@ import {
     Textarea,
     Select,
     Text,
+    Box,
+    Image,
     useColorModeValue,
     useToast,
 } from "@chakra-ui/react";
@@ -27,6 +29,8 @@ const CreateCourseModal = ({ isOpen, onClose, onSuccess }) => {
     const [price, setPrice] = useState("");
     const [category, setCategory] = useState("Communication");
     const [levelTarget, setLevelTarget] = useState("A1");
+    const [thumbnailFile, setThumbnailFile] = useState(null);
+    const [thumbnailPreview, setThumbnailPreview] = useState(null);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState("");
 
@@ -49,12 +53,26 @@ const CreateCourseModal = ({ isOpen, onClose, onSuccess }) => {
                 category,
                 levelTarget,
             };
-            await courseAPI.createCourse(payload);
+            const newCourse = await courseAPI.createCourse(payload);
+            if (thumbnailFile && newCourse?.courseId) {
+                try {
+                    await courseAPI.uploadCourseThumbnail(newCourse.courseId, thumbnailFile);
+                } catch (uploadErr) {
+                    toast({
+                        title: "Course created, thumbnail upload failed",
+                        description: uploadErr.message,
+                        status: "warning",
+                        duration: 4000,
+                    });
+                }
+            }
             setTitle("");
             setDescription("");
             setPrice("");
             setCategory("Communication");
             setLevelTarget("A1");
+            setThumbnailFile(null);
+            setThumbnailPreview(null);
             onClose();
             toast({
                 title: "Success",
@@ -74,10 +92,25 @@ const CreateCourseModal = ({ isOpen, onClose, onSuccess }) => {
         setError("");
         setTitle("");
         setDescription("");
-        setPrice("");
+setPrice("");
         setCategory("Communication");
         setLevelTarget("A1");
+        setThumbnailFile(null);
+        setThumbnailPreview(null);
         onClose();
+    };
+
+    const handleThumbnailChange = (e) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setThumbnailFile(file);
+            const reader = new FileReader();
+            reader.onloadend = () => setThumbnailPreview(reader.result);
+            reader.readAsDataURL(file);
+        } else {
+            setThumbnailFile(null);
+            setThumbnailPreview(null);
+        }
     };
 
     return (
@@ -123,7 +156,7 @@ const CreateCourseModal = ({ isOpen, onClose, onSuccess }) => {
                                     type="number"
                                     min={0}
                                     value={price}
-                                    onChange={(e) => setPrice(e.target.value)}
+onChange={(e) => setPrice(e.target.value)}
                                     placeholder="0 for free"
                                     bg={useColorModeValue("white", "gray.700")}
                                     borderColor={useColorModeValue("gray.200", "gray.600")}
@@ -158,6 +191,25 @@ const CreateCourseModal = ({ isOpen, onClose, onSuccess }) => {
                                         </option>
                                     ))}
                                 </Select>
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel color={textColor}>Ảnh bìa (tùy chọn)</FormLabel>
+                                <Input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleThumbnailChange}
+                                    pt={1}
+                                />
+                                {thumbnailPreview && (
+                                    <Box mt={2}>
+                                        <Image
+                                            src={thumbnailPreview}
+                                            alt="Preview"
+                                            maxH="120px"
+                                            borderRadius="md"
+/>
+                                    </Box>
+                                )}
                             </FormControl>
                         </VStack>
                     </ModalBody>

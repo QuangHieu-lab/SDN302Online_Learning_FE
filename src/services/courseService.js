@@ -97,6 +97,46 @@ export const courseAPI = {
     });
   },
 
+  // Publish course directly (instructor)
+  publishCourse: async (courseId) => {
+    return fetchWithAuth(`${API_URL}/courses/${courseId}/publish`, {
+      method: "POST",
+    });
+  },
+
+  // Flag course content as inappropriate (admin only)
+  flagCourse: async (courseId, { reason } = {}) => {
+    return fetchWithAuth(`${API_URL}/courses/${courseId}/flag`, {
+      method: "POST",
+      body: JSON.stringify({ reason: reason || "" }),
+    });
+  },
+
+  // Unflag course (admin only)
+  unflagCourse: async (courseId) => {
+    return fetchWithAuth(`${API_URL}/courses/${courseId}/unflag`, {
+      method: "POST",
+    });
+  },
+
+  // Upload course thumbnail (instructor)
+  uploadCourseThumbnail: async (courseId, file) => {
+    const token = getAuthToken();
+    const formData = new FormData();
+    formData.append("thumbnail", file);
+    const response = await fetch(`${API_URL}/courses/${courseId}/thumbnail`, {
+      method: "POST",
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: formData,
+      credentials: "include",
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || data.message || "Upload failed");
+    }
+    return data;
+  },
+
   // Approve course (admin only)
   approveCourse: async (courseId) => {
     return fetchWithAuth(`${API_URL}/courses/${courseId}/approve`, {
@@ -141,6 +181,21 @@ export const courseAPI = {
     return fetchWithAuth(`${API_URL}/courses/${courseId}/modules`, {
       method: "POST",
       body: JSON.stringify(payload),
+    });
+  },
+
+  // Update module (instructor)
+  updateModule: async (courseId, moduleId, payload) => {
+    return fetchWithAuth(`${API_URL}/courses/${courseId}/modules/${moduleId}`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    });
+  },
+
+  // Delete module (instructor)
+  deleteModule: async (courseId, moduleId) => {
+    return fetchWithAuth(`${API_URL}/courses/${courseId}/modules/${moduleId}`, {
+      method: "DELETE",
     });
   },
 };

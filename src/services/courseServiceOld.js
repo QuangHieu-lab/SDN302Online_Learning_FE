@@ -48,7 +48,7 @@ export const courseAPI = {
   // Get all courses with optional filters
   getCourses: async (filters = {}) => {
     const queryParams = new URLSearchParams();
-    
+
     // Add filters to query params
     if (filters.search) queryParams.append("search", filters.search);
     if (filters.level && filters.level.length > 0) {

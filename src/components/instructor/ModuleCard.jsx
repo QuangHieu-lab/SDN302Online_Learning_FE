@@ -10,6 +10,7 @@ import {
     Divider,
     useColorModeValue,
 } from "@chakra-ui/react";
+import PropTypes from "prop-types";
 import {
     DragIcon,
     ExpandMoreIcon,
@@ -26,7 +27,18 @@ import {
 } from "./Icons";
 import { PRIMARY_COLOR } from "../../constants/instructor";
 
-const ModuleCard = ({ module, onToggle, onAddLesson, onOpenResources, onOpenQuiz, onUploadVideo }) => {
+const ModuleCard = ({
+    module,
+    onToggle,
+    onAddLesson,
+    onEditModule,
+    onDeleteModule,
+    onLessonSettings,
+    onOpenResources,
+    onOpenQuiz,
+    onUploadVideo,
+    onOpenAssignment,
+}) => {
     const cardBg = useColorModeValue("white", "rgba(30, 41, 59, 0.4)");
     const headerBg = useColorModeValue("gray.50", "rgba(30, 41, 59, 0.2)");
     const borderColor = useColorModeValue("gray.200", "gray.700");
@@ -91,6 +103,10 @@ const ModuleCard = ({ module, onToggle, onAddLesson, onOpenResources, onOpenQuiz
                         color="gray.400"
                         _hover={{ color: textColor, bg: useColorModeValue("gray.100", "gray.700") }}
                         aria-label="Edit module"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onEditModule?.(module);
+                        }}
                     />
                     <IconButton
                         icon={<DeleteIcon boxSize={5} />}
@@ -99,6 +115,10 @@ const ModuleCard = ({ module, onToggle, onAddLesson, onOpenResources, onOpenQuiz
                         color="gray.400"
                         _hover={{ color: "red.500", bg: "red.50" }}
                         aria-label="Delete module"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onDeleteModule?.(module);
+                        }}
                     />
                 </HStack>
             </Flex>
@@ -185,6 +205,18 @@ const ModuleCard = ({ module, onToggle, onAddLesson, onOpenResources, onOpenQuiz
                                         Add Quiz
                                     </Button>
                                 )}
+                                {(lesson.assignments && lesson.assignments.length > 0) || lesson.type === "assignment" ? (
+                                    <Button
+                                        size="sm"
+                                        leftIcon={<AssignmentIcon boxSize={4} />}
+                                        variant="outline"
+                                        colorScheme="orange"
+                                        fontWeight="bold"
+                                        onClick={() => onOpenAssignment && onOpenAssignment(lesson)}
+                                    >
+                                        Review Submissions
+                                    </Button>
+                                ) : null}
                                 <Button
                                     size="sm"
                                     leftIcon={<BookIcon boxSize={4} />}
@@ -211,6 +243,7 @@ const ModuleCard = ({ module, onToggle, onAddLesson, onOpenResources, onOpenQuiz
                                     color="gray.400"
                                     _hover={{ color: textColor }}
                                     aria-label="Lesson settings"
+                                    onClick={() => onLessonSettings?.(lesson)}
                                 />
                             </HStack>
                         </Flex>
@@ -242,6 +275,28 @@ const ModuleCard = ({ module, onToggle, onAddLesson, onOpenResources, onOpenQuiz
             </Collapse>
         </Box>
     );
+};
+
+ModuleCard.propTypes = {
+    module: PropTypes.shape({
+        moduleId: PropTypes.number,
+        id: PropTypes.number,
+        title: PropTypes.string,
+        isExpanded: PropTypes.bool,
+        _count: PropTypes.shape({
+            lessons: PropTypes.number,
+        }),
+        lessons: PropTypes.arrayOf(PropTypes.object),
+    }),
+    onToggle: PropTypes.func,
+    onAddLesson: PropTypes.func,
+    onEditModule: PropTypes.func,
+    onDeleteModule: PropTypes.func,
+    onLessonSettings: PropTypes.func,
+    onOpenResources: PropTypes.func,
+    onOpenQuiz: PropTypes.func,
+    onUploadVideo: PropTypes.func,
+    onOpenAssignment: PropTypes.func,
 };
 
 export default ModuleCard;

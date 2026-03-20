@@ -24,6 +24,7 @@ import {
     CircularProgressLabel,
 } from "@chakra-ui/react";
 import { CheckCircleIcon, WarningIcon } from "@chakra-ui/icons";
+import { useNavigate } from "react-router-dom";
 import { quizAPI } from "../../services/quizService";
 import { PRIMARY_COLOR } from "../../constants/instructor";
 
@@ -33,6 +34,7 @@ const TakeQuizModal = ({ isOpen, onClose, quizId, quizTitle, onSubmitted }) => {
     const [submitting, setSubmitting] = useState(false);
     const [result, setResult] = useState(null);
     const [selections, setSelections] = useState({});
+    const navigate = useNavigate();
     const toast = useToast();
     const textColor = useColorModeValue("gray.900", "white");
     const mutedColor = useColorModeValue("gray.500", "gray.400");
@@ -47,7 +49,39 @@ const TakeQuizModal = ({ isOpen, onClose, quizId, quizTitle, onSubmitted }) => {
             .getQuizById(quizId)
             .then((data) => {
                 console.log("Quiz data loaded:", data);
-                setQuiz(data);
+                const quizData = data?.quiz ?? data;
+                setQuiz(quizData);
+
+                const questionResultsFromApi = Array.isArray(data?.questionResults)
+                    ? data.questionResults
+                    : [];
+
+                if (questionResultsFromApi.length > 0) {
+                    const totalQuestions =
+                        questionResultsFromApi.length || quizData?.questions?.length || 0;
+                    const correctCount = questionResultsFromApi.filter((r) => r.isCorrect).length;
+                    const scoreFromAttempt =
+                        data?.attempt && data.attempt.totalScore != null
+                            ? Number(data.attempt.totalScore)
+                            : null;
+                    const score =
+                        scoreFromAttempt != null && !Number.isNaN(scoreFromAttempt)
+                            ? Math.round(scoreFromAttempt)
+                            : totalQuestions > 0
+                                ? Math.round((correctCount / totalQuestions) * 100)
+                                : 0;
+                    const passingScore =
+                        typeof quizData?.passingScore === "number" ? quizData.passingScore : 70;
+                    const passed = score >= passingScore;
+
+                    setResult({
+                        score,
+                        correctCount,
+                        totalQuestions,
+                        passed,
+                        questionResults: questionResultsFromApi,
+                    });
+                }
             })
             .catch((err) => {
                 console.error("Error loading quiz:", err);
@@ -101,6 +135,11 @@ const TakeQuizModal = ({ isOpen, onClose, quizId, quizTitle, onSubmitted }) => {
         setResult(null);
         setSelections({});
         onClose();
+    };
+
+    const handleRetake = () => {
+        setResult(null);
+        setSelections({});
     };
 
     // Render kết quả quiz với UI đẹp hơn
@@ -220,6 +259,37 @@ const TakeQuizModal = ({ isOpen, onClose, quizId, quizTitle, onSubmitted }) => {
                         )}
                     </Box>
                 )}
+
+                {result.certificateEarned && result.certificateData?.certificateId && (
+                    <Box
+                        p={4}
+                        borderRadius="lg"
+                        borderWidth="1px"
+                        borderColor="green.200"
+                        bg="green.50"
+                    >
+                        <VStack align="start" spacing={3}>
+                            <Text fontWeight="bold" color="green.700">
+                                Certificate unlocked
+                            </Text>
+                            <Text fontSize="sm" color="green.700">
+                                Congratulations! You have earned your course certificate.
+                            </Text>
+                            <Button
+                                size="sm"
+                                colorScheme="green"
+                                onClick={() => {
+                                    handleClose();
+                                    navigate(
+                                        `/student/certificates/${result.certificateData.certificateId}`
+                                    );
+                                }}
+                            >
+                                View Certificate
+                            </Button>
+                        </VStack>
+                    </Box>
+                )}
             </VStack>
         );
     };
@@ -274,9 +344,18 @@ const TakeQuizModal = ({ isOpen, onClose, quizId, quizTitle, onSubmitted }) => {
                 </ModalBody>
                 <ModalFooter>
                     {result ? (
-                        <Button colorScheme="blue" onClick={handleClose}>
-                            Đóng
-                        </Button>
+                        <>
+                            <Button
+                                variant="outline"
+                                mr={3}
+                                onClick={handleRetake}
+                            >
+                                Làm lại
+                            </Button>
+                            <Button colorScheme="blue" onClick={handleClose}>
+                                Đóng
+                            </Button>
+                        </>
                     ) : quiz?.questions?.length ? (
                         <Button
                             bg={PRIMARY_COLOR}

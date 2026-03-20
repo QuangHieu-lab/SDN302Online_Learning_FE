@@ -142,7 +142,7 @@ const StudentNavbar = () => {
                 {/* User Actions */}
                 <HStack spacing={2} flexShrink={0}>
                     {/* Notifications */}
-                    <Popover placement="bottom-end">
+                    {/* <Popover placement="bottom-end">
                         <PopoverTrigger>
                             <Box position="relative">
                                 <IconButton
@@ -168,8 +168,8 @@ const StudentNavbar = () => {
                                     </Badge>
                                 )}
                             </Box>
-                        </PopoverTrigger>
-                        <PopoverContent bg={menuBg} w="300px">
+                        </PopoverTrigger> */}
+                    {/* <PopoverContent bg={menuBg} w="300px">
                             <PopoverArrow bg={menuBg} />
                             <PopoverHeader fontWeight="bold" borderBottomWidth="1px">
                                 Notifications
@@ -210,7 +210,7 @@ const StudentNavbar = () => {
                                 )}
                             </PopoverBody>
                         </PopoverContent>
-                    </Popover>
+                    </Popover> */}
 
                     {/* User Menu */}
                     <Menu>
@@ -253,7 +253,7 @@ const StudentNavbar = () => {
                             >
                                 Dashboard
                             </MenuItem>
-                            <MenuItem
+                            {/* <MenuItem
                                 icon={<UserIcon boxSize={4} />}
                                 onClick={() => navigate("/profile")}
                             >
@@ -264,7 +264,7 @@ const StudentNavbar = () => {
                                 onClick={() => navigate("/settings")}
                             >
                                 Settings
-                            </MenuItem>
+                            </MenuItem> */}
                             <MenuDivider />
                             <MenuItem
                                 icon={<LogoutIcon boxSize={4} />}

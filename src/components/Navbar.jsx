@@ -204,7 +204,7 @@ const Navbar = () => {
                     <HStack spacing={3} display={{ base: "none", md: "flex" }} zIndex={20}>
                         {isAuthenticated ? (
                             <>
-                                {/* Cart Icon */}
+                                {/* Cart Icon
                                 <Box position="relative">
                                     <IconButton
                                         icon={<CartIcon boxSize={5} />}
@@ -229,10 +229,10 @@ const Navbar = () => {
                                             {cartItemsCount}
                                         </Badge>
                                     )}
-                                </Box>
+                                </Box> */}
 
                                 {/* Notifications */}
-                                <Popover placement="bottom-end">
+                                {/* <Popover placement="bottom-end">
                                     <PopoverTrigger>
                                         <Box position="relative">
                                             <IconButton
@@ -258,8 +258,8 @@ const Navbar = () => {
                                                 </Badge>
                                             )}
                                         </Box>
-                                    </PopoverTrigger>
-                                    <PopoverContent bg={menuBg} w="300px">
+                                    </PopoverTrigger> */}
+                                {/* <PopoverContent bg={menuBg} w="300px">
                                         <PopoverArrow bg={menuBg} />
                                         <PopoverHeader fontWeight="bold" borderBottomWidth="1px">
                                             Notifications
@@ -300,7 +300,7 @@ const Navbar = () => {
                                             )}
                                         </PopoverBody>
                                     </PopoverContent>
-                                </Popover>
+                                </Popover> */}
 
                                 {/* User Menu */}
                                 <Menu>
@@ -343,18 +343,18 @@ const Navbar = () => {
                                         >
                                             Dashboard
                                         </MenuItem>
-                                        <MenuItem
+                                        {/* <MenuItem
                                             icon={<UserIcon boxSize={4} />}
                                             onClick={() => navigate("/profile")}
                                         >
                                             My Profile
-                                        </MenuItem>
-                                        <MenuItem
+                                        </MenuItem> */}
+                                        {/* <MenuItem
                                             icon={<SettingsIcon boxSize={4} />}
                                             onClick={() => navigate("/settings")}
                                         >
                                             Settings
-                                        </MenuItem>
+                                        </MenuItem> */}
                                         <MenuDivider />
                                         <MenuItem
                                             icon={<LogoutIcon boxSize={4} />}
@@ -528,7 +528,7 @@ const Navbar = () => {
                                             Dashboard
                                         </Text>
                                     </Link>
-                                    <Link to="/profile" onClick={onClose}>
+                                    {/* <Link to="/profile" onClick={onClose}>
                                         <Text fontWeight="bold" fontSize="lg">
                                             My Profile
                                         </Text>
@@ -537,7 +537,7 @@ const Navbar = () => {
                                         <Text fontWeight="bold" fontSize="lg">
                                             Settings
                                         </Text>
-                                    </Link>
+                                    </Link> */}
                                     <Button
                                         colorScheme="red"
                                         variant="outline"

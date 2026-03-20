@@ -24,6 +24,7 @@ import {
     CircularProgressLabel,
 } from "@chakra-ui/react";
 import { CheckCircleIcon, WarningIcon } from "@chakra-ui/icons";
+import { useNavigate } from "react-router-dom";
 import { quizAPI } from "../../services/quizService";
 import { PRIMARY_COLOR } from "../../constants/instructor";
 
@@ -33,6 +34,7 @@ const TakeQuizModal = ({ isOpen, onClose, quizId, quizTitle, onSubmitted }) => {
     const [submitting, setSubmitting] = useState(false);
     const [result, setResult] = useState(null);
     const [selections, setSelections] = useState({});
+    const navigate = useNavigate();
     const toast = useToast();
     const textColor = useColorModeValue("gray.900", "white");
     const mutedColor = useColorModeValue("gray.500", "gray.400");
@@ -78,7 +80,7 @@ const TakeQuizModal = ({ isOpen, onClose, quizId, quizTitle, onSubmitted }) => {
                         totalQuestions,
                         passed,
                         questionResults: questionResultsFromApi,
-});
+                    });
                 }
             })
             .catch((err) => {
@@ -162,7 +164,7 @@ const TakeQuizModal = ({ isOpen, onClose, quizId, quizTitle, onSubmitted }) => {
                         color={passed ? "green.400" : "red.400"}
                     >
                         <CircularProgressLabel>
-<VStack spacing={0}>
+                            <VStack spacing={0}>
                                 <Text fontSize="2xl" fontWeight="bold" color={textColor}>
                                     {score}%
                                 </Text>
@@ -225,7 +227,7 @@ const TakeQuizModal = ({ isOpen, onClose, quizId, quizTitle, onSubmitted }) => {
                                 <HStack justify="space-between" mb={1}>
                                     <Text fontSize="sm" fontWeight="medium" color={textColor}>
                                         Câu {i + 1}: {r.questionContent || r.questionText || ""}
-</Text>
+                                    </Text>
                                     <Badge colorScheme={r.isCorrect ? "green" : "red"} size="sm">
                                         {r.isCorrect ? "Đúng" : "Sai"}
                                     </Badge>
@@ -257,6 +259,37 @@ const TakeQuizModal = ({ isOpen, onClose, quizId, quizTitle, onSubmitted }) => {
                         )}
                     </Box>
                 )}
+
+                {result.certificateEarned && result.certificateData?.certificateId && (
+                    <Box
+                        p={4}
+                        borderRadius="lg"
+                        borderWidth="1px"
+                        borderColor="green.200"
+                        bg="green.50"
+                    >
+                        <VStack align="start" spacing={3}>
+                            <Text fontWeight="bold" color="green.700">
+                                Certificate unlocked
+                            </Text>
+                            <Text fontSize="sm" color="green.700">
+                                Congratulations! You have earned your course certificate.
+                            </Text>
+                            <Button
+                                size="sm"
+                                colorScheme="green"
+                                onClick={() => {
+                                    handleClose();
+                                    navigate(
+                                        `/student/certificates/${result.certificateData.certificateId}`
+                                    );
+                                }}
+                            >
+                                View Certificate
+                            </Button>
+                        </VStack>
+                    </Box>
+                )}
             </VStack>
         );
     };
@@ -285,7 +318,7 @@ const TakeQuizModal = ({ isOpen, onClose, quizId, quizTitle, onSubmitted }) => {
                                         {idx + 1}. {q.contentText}
                                     </Text>
                                     <RadioGroup
-value={selections[q.questionId]?.toString() || ""}
+                                        value={selections[q.questionId]?.toString() || ""}
                                         onChange={(val) =>
                                             setSelections((prev) => ({
                                                 ...prev,

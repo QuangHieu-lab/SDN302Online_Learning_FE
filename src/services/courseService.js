@@ -105,7 +105,7 @@ export const courseAPI = {
   },
 
   // Flag course content as inappropriate (admin only)
-flagCourse: async (courseId, { reason } = {}) => {
+  flagCourse: async (courseId, { reason } = {}) => {
     return fetchWithAuth(`${API_URL}/courses/${courseId}/flag`, {
       method: "POST",
       body: JSON.stringify({ reason: reason || "" }),
@@ -181,6 +181,21 @@ flagCourse: async (courseId, { reason } = {}) => {
     return fetchWithAuth(`${API_URL}/courses/${courseId}/modules`, {
       method: "POST",
       body: JSON.stringify(payload),
+    });
+  },
+
+  // Update module (instructor)
+  updateModule: async (courseId, moduleId, payload) => {
+    return fetchWithAuth(`${API_URL}/courses/${courseId}/modules/${moduleId}`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    });
+  },
+
+  // Delete module (instructor)
+  deleteModule: async (courseId, moduleId) => {
+    return fetchWithAuth(`${API_URL}/courses/${courseId}/modules/${moduleId}`, {
+      method: "DELETE",
     });
   },
 };

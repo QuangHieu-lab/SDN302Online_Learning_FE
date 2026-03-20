@@ -108,7 +108,7 @@ export const instructorAPI = {
 export const courseApprovalAPI = {
   // Get course by ID (for admin review)
   getCourseById: async (courseId) => {
-    return fetchWithAuth(`${API_URL}/courses/${courseId}`, {
+return fetchWithAuth(`${API_URL}/courses/${courseId}`, {
       method: "GET",
     });
   },
@@ -125,6 +125,21 @@ export const courseApprovalAPI = {
     return fetchWithAuth(`${API_URL}/courses/${courseId}/reject`, {
       method: "POST",
       body: JSON.stringify({ adminNote }),
+    });
+  },
+
+  // Flag course content as inappropriate (admin only)
+  flagCourse: async (courseId, { reason } = {}) => {
+    return fetchWithAuth(`${API_URL}/courses/${courseId}/flag`, {
+      method: "POST",
+      body: JSON.stringify({ reason: reason || "" }),
+    });
+  },
+
+  // Unflag course (admin only)
+  unflagCourse: async (courseId) => {
+    return fetchWithAuth(`${API_URL}/courses/${courseId}/unflag`, {
+      method: "POST",
     });
   },
 

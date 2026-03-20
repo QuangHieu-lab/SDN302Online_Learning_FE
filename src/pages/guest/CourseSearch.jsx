@@ -104,7 +104,7 @@ const CourseCard = ({ course, onClick, onAddToCart }) => {
     <Card
       bg={cardBg}
       borderRadius="2xl"
-      border="1px"
+border="1px"
       borderColor={borderColor}
       overflow="hidden"
       cursor="pointer"
@@ -120,6 +120,7 @@ const CourseCard = ({ course, onClick, onAddToCart }) => {
       <Box position="relative" h="48" overflow="hidden">
         <Image
           src={
+            course.thumbnailUrl ||
             course.thumbnail ||
             course.image ||
             "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400"
@@ -210,7 +211,7 @@ const CourseCard = ({ course, onClick, onAddToCart }) => {
                 ? "green"
                 : course.levelTarget === "A2" || course.levelTarget === "B1"
                   ? "yellow"
-                  : course.levelTarget === "B2"
+: course.levelTarget === "B2"
                     ? "orange"
                     : "red"
             }
@@ -315,7 +316,7 @@ const FilterSidebar = ({ filters, setFilters, onApplyFilters }) => {
         <AccordionItem border="none">
           <AccordionButton px={0} _hover={{ bg: "transparent" }}>
             <HStack flex={1} spacing={3}>
-              <Flex
+<Flex
                 w={6}
                 h={6}
                 bg={iconBg}
@@ -402,7 +403,7 @@ const FilterSidebar = ({ filters, setFilters, onApplyFilters }) => {
 
 // Component Pagination
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
-  const buttonBg = useColorModeValue("white", "gray.800");
+const buttonBg = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.700");
   const textColor = useColorModeValue("gray.700", "gray.200");
 
@@ -502,7 +503,7 @@ const CourseSearch = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [courses, setCourses] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
-  const [totalCourses, setTotalCourses] = useState(0);
+const [totalCourses, setTotalCourses] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -589,7 +590,7 @@ const CourseSearch = () => {
       // Trigger search ngay lập tức khi nhấn Enter
       if (searchQuery.trim()) {
         setSearchParams({ q: searchQuery.trim() });
-        setCurrentPage(1);
+setCurrentPage(1);
         fetchCourses();
       }
     }
@@ -681,7 +682,7 @@ const CourseSearch = () => {
         courseId: course.courseId,
         price: course.price,
         title: course.title,
-        thumbnail: course.thumbnail,
+        thumbnail: course.thumbnailUrl || course.thumbnail,
         quantity: 1,
         timestamp: new Date().toISOString(),
       };
@@ -695,7 +696,7 @@ const CourseSearch = () => {
       console.log('[CourseSearch] Cart updated, total items:', cartItems.length);
 
       toast({
-        title: "Success",
+title: "Success",
         description: "Course added to cart successfully!",
         status: "success",
         duration: 3000,
@@ -791,8 +792,7 @@ const CourseSearch = () => {
               onApplyFilters={handleApplyFilters}
             />
           </Box>
-
-          {/* Course Grid */}
+{/* Course Grid */}
           <Box flex={1}>
             {isLoading ? (
               <Center py={20}>

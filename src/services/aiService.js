@@ -29,9 +29,9 @@ export const aiAPI = {
       body: JSON.stringify(payload),
     }),
 
-  chatWithTutor: (lessonId, message) =>
+  chatWithTutor: (lessonId, message, history = []) =>
     fetchWithAuth(`${API_URL}/ai/lessons/${lessonId}/chat`, {
       method: "POST",
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ message, history }),
     }),
 };

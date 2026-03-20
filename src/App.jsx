@@ -1,5 +1,5 @@
 import "./App.css";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate, useParams } from "react-router-dom";
 import Home from "./pages/guest/Home";
 import Login from "./pages/guest/Login";
 import Signup from "./pages/guest/Signup";
@@ -12,6 +12,7 @@ import StudentDashboard from "./pages/student/Dashboard";
 import StudentCourses from "./pages/student/StudentCourses";
 import Profile from "./pages/student/Profile";
 import InstructorDashboard from "./pages/instructor/Dashboard";
+import InstructorProgress from "./pages/instructor/Progress";
 import Payment from "./pages/student/Payment";
 import AdminDashboard from "./pages/admin/Dashboard";
 import RevenueTracking from "./pages/admin/RevenueTracking";
@@ -53,6 +54,7 @@ function App() {
 
       {/* Instructor Routes */}
       <Route path="/instructor/dashboard" element={<InstructorDashboard />} />
+      <Route path="/instructor/progress" element={<InstructorProgress />} />
 
       {/* Admin Routes */}
       <Route path="/admin/dashboard" element={<AdminDashboard />} />

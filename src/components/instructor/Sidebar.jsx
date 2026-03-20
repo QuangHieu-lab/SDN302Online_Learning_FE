@@ -8,11 +8,12 @@ import {
     Divider,
     Tooltip,
 } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import {
     SchoolIcon,
     BookIcon,
+    ProgressIcon,
     SettingsIcon,
     LogoutIcon,
     ChevronLeftIcon,
@@ -24,6 +25,7 @@ const SIDEBAR_BG = "#08121a";
 
 const Sidebar = ({ activeTab, setActiveTab, isCollapsed, setIsCollapsed }) => {
     const navigate = useNavigate();
+    const location = useLocation();
     const { logout } = useAuth();
 
     const handleLogout = async () => {
@@ -33,6 +35,7 @@ const Sidebar = ({ activeTab, setActiveTab, isCollapsed, setIsCollapsed }) => {
 
     const menuItems = [
         { id: "courses", label: "My Courses", icon: BookIcon },
+        { id: "progress", label: "Student Progress", icon: ProgressIcon, path: "/instructor/progress" },
     ];
 
     const sidebarWidth = isCollapsed ? "20" : "72";
@@ -115,21 +118,35 @@ variant="ghost"
                         bg={PRIMARY_COLOR}
                         color={SIDEBAR_BG}
                     >
+                        {(() => {
+                            const isActive = item.path
+                                ? location.pathname === item.path
+                                : activeTab === item.id;
+                            return (
                         <Button
                             leftIcon={!isCollapsed ? <item.icon boxSize={5} /> : undefined}
                             justifyContent={isCollapsed ? "center" : "flex-start"}
                             px={isCollapsed ? 0 : 4}
                             py={6}
                             borderRadius="lg"
-                            bg={activeTab === item.id ? PRIMARY_COLOR : "transparent"}
-                            color={activeTab === item.id ? SIDEBAR_BG : "gray.400"}
-                            fontWeight={activeTab === item.id ? "semibold" : "medium"}
+                            bg={isActive ? PRIMARY_COLOR : "transparent"}
+                            color={isActive ? SIDEBAR_BG : "gray.400"}
+                            fontWeight={isActive ? "semibold" : "medium"}
                             fontSize="sm"
                             _hover={{
-                                bg: activeTab === item.id ? PRIMARY_COLOR : "gray.800",
-                                color: activeTab === item.id ? SIDEBAR_BG : "white",
+                                bg: isActive ? PRIMARY_COLOR : "gray.800",
+                                color: isActive ? SIDEBAR_BG : "white",
                             }}
-                            onClick={() => setActiveTab(item.id)}
+                            onClick={() => {
+                                if (item.path) {
+                                    navigate(item.path);
+                                    return;
+                                }
+                                setActiveTab?.(item.id);
+                                if (location.pathname !== "/instructor/dashboard") {
+                                    navigate("/instructor/dashboard");
+                                }
+                            }}
                             minW={isCollapsed ? "auto" : undefined}
                         >
                             {isCollapsed ? (
@@ -138,6 +155,8 @@ variant="ghost"
                                 item.label
                             )}
                         </Button>
+                            );
+                        })()}
                     </Tooltip>
                 ))}
 
